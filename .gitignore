@@ -1,0 +1,7 @@
+# Ignorar base de datos SQLite y archivos de datos pesados
+*.db
+*.csv
+
+# Ignorar carpetas temporales de Jupyter / Colab y Python
+.ipynb_checkpoints/
+__pycache__/
