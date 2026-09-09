@@ -103,3 +103,42 @@ The transformation stage cleans invalid records, computes business logic fields,
 * **Target**: `data_warehouse.db` (SQLite relational database).
 * **Execution**: Transformed DataFrames are persisted into the relational Data Warehouse using `to_sql()` with `if_exists='replace'` to ensure pipeline idempotency.
 * **Data Integrity**: Row count validations are executed post-load to confirm zero data loss across all tables (e.g., 50,000 application records successfully verified in `fact_applications`).
+
+
+---
+
+## KPIs & Visualizations
+
+All analytics and KPI visualizations are directly generated from the Data Warehouse (`data_warehouse.db`) using relational SQL queries joined against the dimension tables.
+
+### SQL Queries Executed:
+1. **Hires by Technology (Pie Chart)**:
+   ```sql
+   SELECT dt.technology_name, COUNT(fa.application_id) AS total_hires
+   FROM fact_applications fa
+   JOIN dim_technology dt ON fa.technology_id = dt.technology_id
+   WHERE fa.is_hired = 1
+   GROUP BY dt.technology_name;
+
+Hires by Year (Horizontal Bar Chart):
+   SELECT dd.year, COUNT(fa.application_id) AS total_hires
+FROM fact_applications fa
+JOIN dim_date dd ON fa.date_id = dd.date_id
+WHERE fa.is_hired = 1
+GROUP BY dd.year;
+
+Hires by Seniority (Bar Chart):
+SELECT ds.seniority_name, COUNT(fa.application_id) AS total_hires
+FROM fact_applications fa
+JOIN dim_seniority ds ON fa.seniority_id = ds.seniority_id
+WHERE fa.is_hired = 1
+GROUP BY ds.seniority_name;
+
+Hires by Country Over Years (Multiline Chart):
+SELECT dd.year, dc.country_name, COUNT(fa.application_id) AS total_hires
+FROM fact_applications fa
+JOIN dim_country dc ON fa.country_id = dc.country_id
+JOIN dim_date dd ON fa.date_id = dd.date_id
+WHERE fa.is_hired = 1 AND dc.country_name IN ('USA', 'Brazil', 'Colombia', 'Ecuador')
+GROUP BY dd.year, dc.country_name;
+
