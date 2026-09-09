@@ -1,5 +1,5 @@
 # Workshop-1
-# Documentación del Data Warehouse
+# Design a Dimensional Data Model (Star Schema).
 
 A continuación se presenta el modelo dimensional del proyecto:
 
